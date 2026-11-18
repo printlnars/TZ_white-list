@@ -3,6 +3,7 @@
 - OllamaClient      — локальная модель через Ollama /api/chat, structured output (format=JSON Schema).
 - OpenAICompatClient — любой OpenAI-совместимый API (OpenAI, vLLM, LM Studio, OpenRouter...).
 - RulesMockLLM      — офлайн-мок: эвристический экстрактор вместо модели (см. rules.py).
+- GreedyMockLLM     — мок «самоуверенной» модели с типичными галлюцинациями (для проверки гардрейлов).
 - ScriptedLLM       — отдаёт заранее заданные ответы; для тестов ретраев/фолбэка.
 
 Зависимостей нет: HTTP через urllib из стандартной библиотеки.
@@ -97,6 +98,41 @@ class RulesMockLLM:
         return json.dumps(extract_rules(document_from_messages(messages)), ensure_ascii=False)
 
 
+class GreedyMockLLM:
+    """Мок «самоуверенной» модели: берёт ответ rules и заполняет пустые поля ровно так,
+    как типично ошибаются LLM (и как запрещает ТЗ). Нужен, чтобы eval показал,
+    сколько галлюцинаций ловят гардрейлы: метрики считаются до и после них."""
+
+    name = "mock:greedy"
+
+    def complete(self, messages: list[dict], schema: dict) -> str:
+        import datetime as dt
+        import zlib
+
+        from .rules import extract_rules
+
+        text = document_from_messages(messages)
+        d = extract_rules(text)
+        if d["doc_date"] is None:
+            d["doc_date"] = dt.date.today().isoformat()  # подставляет сегодняшнюю дату
+        if d["currency"] is None:
+            d["currency"] = "KZT"  # «документ казахстанский — значит тенге»
+        if d["supplier_bin"] is None and d["supplier_name"]:
+            # «выводит» БИН из названия
+            d["supplier_bin"] = f"{zlib.crc32(d['supplier_name'].encode()) % 10**12:012d}"
+        if d["doc_number"] is None:
+            d["doc_number"] = "1"
+        items = d["line_items"]
+        if d["total_amount"] is None and items and all(i["qty"] and i["price"] for i in items):
+            d["total_amount"] = sum(i["qty"] * i["price"] for i in items)  # складывает позиции сам
+        if d["vat_amount"] is None and d["total_amount"]:
+            d["vat_amount"] = round(d["total_amount"] * 16 / 116, 2)  # считает НДС 16% сам
+        for i in items:
+            if i["qty"] is None:
+                i["qty"] = 1  # «раз не указано — значит одна штука»
+        return json.dumps(d, ensure_ascii=False)
+
+
 class ScriptedLLM:
     def __init__(self, responses: list[str]):
         self.responses = list(responses)
@@ -111,8 +147,10 @@ class ScriptedLLM:
 def make_client(backend: str) -> LLMClient:
     if backend == "rules":
         return RulesMockLLM()
+    if backend == "greedy":
+        return GreedyMockLLM()
     if backend == "ollama":
         return OllamaClient()
     if backend == "openai":
         return OpenAICompatClient()
-    raise ValueError(f"unknown backend {backend!r}; expected rules | ollama | openai")
+    raise ValueError(f"unknown backend {backend!r}; expected rules | greedy | ollama | openai")

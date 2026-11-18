@@ -106,7 +106,10 @@ def parse_amount(s: str) -> float | None:
 
 
 def amounts_in_line(line: str) -> list[float]:
-    """Суммы в строке, без процентов (НДС 16% -> 16 не сумма)."""
+    """Суммы в строке, без процентов (НДС 16% -> 16 не сумма) и без дат
+    («valid until December 15, 2026» -> 2026 не сумма)."""
+    for f in reversed(find_dates(line)):
+        line = line[: f.start] + " " + line[f.end:]
     line = re.sub(r"\d+(?:[.,]\d+)?\s*%", " ", line)
     out = []
     for m in _AMOUNT_RE.finditer(line):
