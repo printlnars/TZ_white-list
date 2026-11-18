@@ -25,7 +25,7 @@ CLI получает текст документа (счёт, КП, акт) и �
 Нужны Python ≥ 3.10, `git` и `make`. Ключи API и GPU **не нужны** (по умолчанию работает офлайн-мок, см. ниже).
 
 ```bash
-git clone <URL этого репозитория> docextract
+git clone https://github.com/printlnars/TZ_white-list.git docextract
 cd docextract
 make eval     # создаёт .venv, ставит зависимости (pydantic, pytest), прогоняет eval по всему набору
 make test     # 35 юнит-тестов
