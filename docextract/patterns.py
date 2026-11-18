@@ -56,3 +56,30 @@ def line_roles(text: str) -> list[str | None]:
             cur = "supplier"
         roles.append(cur)
     return roles
+
+
+VAT_INCL = re.compile(r"в\s*т\.\s*ч\.?|в\s+том\s+числе|оның\s+ішінде|\bincl")
+DOC_NUMBER_MARK = re.compile(r"№|\bno\b|n°|номер|нөмір|\bnumber\b|#")
+
+
+def split_total_vat(low_line: str) -> tuple[str, str]:
+    """Делит строку на часть с итогом и часть с суммой НДС.
+    «итого: 475 000, в т.ч. ндс 16%: 65 517»  -> ('итого: 475 000, ', 'ндс 16%: 65 517')
+    «итого с ндс: 580 000»                     -> ('итого с ндс: 580 000', '')   (это итог, не НДС)
+    «ндс 16%: 25 680»                          -> ('', 'ндс 16%: 25 680')"""
+    v = VAT_KW.search(low_line)
+    t = TOTAL_KW.search(low_line)
+    if not v:
+        return (low_line if t else ""), ""
+    if not t:
+        return "", low_line[v.start():]
+    inc = VAT_INCL.search(low_line[: v.start()])
+    if inc and inc.start() > t.start():
+        return low_line[: inc.start()], low_line[v.start():]
+    return low_line, ""
+
+
+def vat_amounts(low_lines: list[str]) -> list[float]:
+    from .textnorm import amounts_in_line
+
+    return [a for l in low_lines for a in amounts_in_line(split_total_vat(l)[1])]

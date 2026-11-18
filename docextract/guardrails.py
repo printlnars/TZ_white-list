@@ -106,9 +106,11 @@ def apply(raw: LLMOutput, text: str) -> Extraction:
         key = norm_name(num)
         rx = re.compile(r"(?<!\w)" + re.escape(key) + r"(?!\w)") if key else None
         hits = [i for i, l in enumerate(doc.lines) if rx and rx.search(norm_name(l))]
-        if not hits:
-            drop("doc_number", "номера нет в тексте")
-        elif all(re.search(r"договор|келісім|contract", doc.low_lines[i]) for i in hits):
+        # Номер должен стоять в строке с «№/No/номер» или в шапке: иначе «1» найдётся где угодно.
+        marked = [i for i in hits if i < 3 or P.DOC_NUMBER_MARK.search(doc.low_lines[i])]
+        if not marked:
+            drop("doc_number", "номера нет в тексте рядом с №/No" if hits else "номера нет в тексте")
+        elif all(re.search(r"договор|келісім|contract", doc.low_lines[i]) for i in marked):
             warns.append(f"DOC_NUMBER_IS_CONTRACT: {num!r} — номер договора, не документа -> null")
             out["doc_number"] = None
         else:
@@ -166,8 +168,7 @@ def apply(raw: LLMOutput, text: str) -> Extraction:
         conf["line_items"] = 0.9 if len(items_ok) == len(raw.line_items) else 0.5
 
     # ------------------------------------------------------------ vat_amount
-    vat_lines = [l for l in doc.low_lines if P.VAT_KW.search(l)]
-    text_vats = [v for l in vat_lines for v in amounts_in_line(l[P.VAT_KW.search(l).start():])]
+    text_vats = P.vat_amounts(doc.low_lines)
     exempt = bool(P.VAT_EXEMPT.search(doc.low))
     if out["vat_amount"] is not None:
         if not any(_close(out["vat_amount"], v) for v in text_vats):
@@ -223,10 +224,7 @@ def _resolve_total(doc: _Doc, out: dict, conf: dict, warns: list, text_vats: lis
     for l in doc.low_lines:
         if not P.TOTAL_KW.search(l):
             continue
-        part = l
-        vm = P.VAT_KW.search(l)
-        if vm and vm.start() > P.TOTAL_KW.search(l).start():
-            part = l[: vm.start()]  # «Итого: 475 000, в т.ч. НДС: 65 517» -> до НДС
+        part = P.split_total_vat(l)[0]  # «Итого: 475 000, в т.ч. НДС: 65 517» -> до «в т.ч.»
         vals = [(v, "digits") for v in amounts_in_line(part)] + [(float(v), "words") for v in amounts_in_words(l)]
         if P.SUBTOTAL_KW.search(l):
             subtotals.update(v for v, _ in vals)
@@ -236,7 +234,7 @@ def _resolve_total(doc: _Doc, out: dict, conf: dict, warns: list, text_vats: lis
         mx = max(v for v, _ in finals)
         finals = [(v, k) for v, k in finals if v >= mx * 0.01]
     for v, _ in finals:
-        if any(_close(v + tv, w, 1) for tv in text_vats for w, _ in finals):
+        if any(_close(v + tv, w, 1) for tv in text_vats if tv > 0 for w, _ in finals):
             subtotals.add(v)
     finals = [(v, k) for v, k in finals if not any(_close(v, s) for s in subtotals)]
     distinct: list[float] = []

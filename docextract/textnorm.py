@@ -114,7 +114,7 @@ def amounts_in_line(line: str) -> list[float]:
     out = []
     for m in _AMOUNT_RE.finditer(line):
         v = parse_amount(m.group(0))
-        if v is not None:
+        if v:  # 0 — это «00 тиын», а не сумма
             out.append(v)
     return out
 

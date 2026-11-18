@@ -97,10 +97,7 @@ def _total(low_lines: list[str]) -> float | None:
     for l in low_lines:
         if not P.TOTAL_KW.search(l) or P.SUBTOTAL_KW.search(l):
             continue
-        part = l
-        vm = P.VAT_KW.search(l)
-        if vm and vm.start() > P.TOTAL_KW.search(l).start():
-            part = l[: vm.start()]
+        part = P.split_total_vat(l)[0]
         words = amounts_in_words(l)
         digits = amounts_in_line(part)
         if words:
@@ -111,13 +108,8 @@ def _total(low_lines: list[str]) -> float | None:
 
 
 def _vat(low_lines: list[str]) -> float | None:
-    for l in low_lines:
-        m = P.VAT_KW.search(l)
-        if m and not P.VAT_EXEMPT.search(l):
-            vals = amounts_in_line(l[m.start():])
-            if vals:
-                return vals[-1]
-    return None
+    vals = P.vat_amounts([l for l in low_lines if not P.VAT_EXEMPT.search(l)])
+    return vals[0] if vals else None
 
 
 def _num(v: float):
