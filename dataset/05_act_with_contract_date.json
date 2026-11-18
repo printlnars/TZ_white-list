@@ -1,0 +1,26 @@
+{
+  "note": "Ловушки: дата договора-основания и БИН заказчика. Дата прописью месяцем.",
+  "expected": {
+    "doc_type": "act",
+    "supplier_name": "ТОО \"Нур Сервис Плюс\"",
+    "supplier_bin": "200840051232",
+    "doc_number": "37",
+    "doc_date": "2026-10-15",
+    "currency": "KZT",
+    "total_amount": 580000,
+    "vat_amount": 80000,
+    "line_items": [
+      {
+        "name": "Абонентское обслуживание серверов",
+        "qty": 1,
+        "price": 400000
+      },
+      {
+        "name": "Выезд инженера",
+        "qty": 4,
+        "price": 25000
+      }
+    ]
+  },
+  "expected_warnings": []
+}

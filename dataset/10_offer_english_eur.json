@@ -1,0 +1,26 @@
+{
+  "note": "Английский текст, EUR, формат 12,500.00. VAT не указан -> null.",
+  "expected": {
+    "doc_type": "commercial_offer",
+    "supplier_name": "Nordic Tech Solutions GmbH",
+    "supplier_bin": null,
+    "doc_number": null,
+    "doc_date": "2026-11-04",
+    "currency": "EUR",
+    "total_amount": 12500,
+    "vat_amount": null,
+    "line_items": [
+      {
+        "name": "Industrial IoT gateway NTS-400",
+        "qty": 10,
+        "price": 850
+      },
+      {
+        "name": "Setup and commissioning",
+        "qty": 1,
+        "price": 4000
+      }
+    ]
+  },
+  "expected_warnings": []
+}

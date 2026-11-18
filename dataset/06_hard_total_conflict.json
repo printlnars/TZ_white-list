@@ -1,0 +1,29 @@
+{
+  "note": "СЛОЖНЫЙ: итог цифрами (250 000) противоречит итогу прописью (255 000). По правилу берём значение, сходящееся с суммой позиций.",
+  "expected": {
+    "doc_type": "invoice",
+    "supplier_name": "ТОО «ЭкоПак Казахстан»",
+    "supplier_bin": "221140034560",
+    "doc_number": "518",
+    "doc_date": "2026-10-21",
+    "currency": "KZT",
+    "total_amount": 250000,
+    "vat_amount": null,
+    "line_items": [
+      {
+        "name": "Пакет ПНД 30х60, упак.",
+        "qty": 100,
+        "price": 1200
+      },
+      {
+        "name": "Стретч-плёнка 500 мм",
+        "qty": 20,
+        "price": 6500
+      }
+    ]
+  },
+  "expected_warnings": [
+    "TOTAL_CONFLICT",
+    "VAT_NOT_APPLICABLE"
+  ]
+}

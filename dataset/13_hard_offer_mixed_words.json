@@ -1,0 +1,26 @@
+{
+  "note": "СЛОЖНЫЙ: смешанный казахско-русский текст, итог только прописью по-казахски (миллион). НДС включён, но сумма НДС не указана -> null (не считаем 16/116).",
+  "expected": {
+    "doc_type": "commercial_offer",
+    "supplier_name": "ТОО «Smart Office Group»",
+    "supplier_bin": "151240028762",
+    "doc_number": "КП-112",
+    "doc_date": "2026-11-10",
+    "currency": "KZT",
+    "total_amount": 1650000,
+    "vat_amount": null,
+    "line_items": [
+      {
+        "name": "Кеңсе креслосы / Кресло офисное \"Ergo\"",
+        "qty": 15,
+        "price": 62000
+      },
+      {
+        "name": "Үстел / Стол письменный 140x70",
+        "qty": 15,
+        "price": 48000
+      }
+    ]
+  },
+  "expected_warnings": []
+}

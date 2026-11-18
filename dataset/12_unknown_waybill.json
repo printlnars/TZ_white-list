@@ -1,0 +1,26 @@
+{
+  "note": "Накладная — не счёт/КП/акт -> unknown. Цен нет -> price null, итога нет.",
+  "expected": {
+    "doc_type": "unknown",
+    "supplier_name": "ТОО «Строй Маркет»",
+    "supplier_bin": "990101400015",
+    "doc_number": "0093",
+    "doc_date": "2026-11-12",
+    "currency": null,
+    "total_amount": null,
+    "vat_amount": null,
+    "line_items": [
+      {
+        "name": "Цемент М400",
+        "qty": 40,
+        "price": null
+      },
+      {
+        "name": "Арматура 12 мм",
+        "qty": 2,
+        "price": null
+      }
+    ]
+  },
+  "expected_warnings": []
+}

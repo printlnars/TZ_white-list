@@ -1,0 +1,28 @@
+{
+  "note": "Документ 1 из ТЗ. total = 'Всего к оплате' (с НДС), а не 'Итого' (без НДС). БИН не проходит контрольную сумму РК — значение оставляем, но предупреждаем.",
+  "expected": {
+    "doc_type": "invoice",
+    "supplier_name": "ТОО \"Алматы Трейд Компани\"",
+    "supplier_bin": "170340021554",
+    "doc_number": "1245",
+    "doc_date": "2026-11-12",
+    "currency": "KZT",
+    "total_amount": 186180,
+    "vat_amount": 25680,
+    "line_items": [
+      {
+        "name": "Бумага А4 80г/м2",
+        "qty": 50,
+        "price": 2100
+      },
+      {
+        "name": "Картридж HP 85A",
+        "qty": 3,
+        "price": 18500
+      }
+    ]
+  },
+  "expected_warnings": [
+    "BIN_CHECKSUM_INVALID"
+  ]
+}

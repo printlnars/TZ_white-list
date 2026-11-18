@@ -1,0 +1,28 @@
+{
+  "note": "СЛОЖНЫЙ: OCR-шум — латиница вместо кириллицы, O вместо 0, 0 вместо о.",
+  "expected": {
+    "doc_type": "invoice",
+    "supplier_name": "ТОО \"Бест Принт\"",
+    "supplier_bin": "160740099888",
+    "doc_number": "7741",
+    "doc_date": "2026-10-03",
+    "currency": "KZT",
+    "total_amount": 111940,
+    "vat_amount": 15440,
+    "line_items": [
+      {
+        "name": "Визитки 90x50, 1000 шт",
+        "qty": 5,
+        "price": 8500
+      },
+      {
+        "name": "Баннер 3x6 м",
+        "qty": 1,
+        "price": 54000
+      }
+    ]
+  },
+  "expected_warnings": [
+    "BIN_OCR_CORRECTED"
+  ]
+}

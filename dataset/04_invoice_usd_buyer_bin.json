@@ -1,0 +1,28 @@
+{
+  "note": "Ловушка: БИН покупателя. Валюта USD, десятичные с запятой.",
+  "expected": {
+    "doc_type": "invoice",
+    "supplier_name": "ТОО «Кастер Логистик»",
+    "supplier_bin": "190540012345",
+    "doc_number": "INV-2026/0412",
+    "doc_date": "2026-11-03",
+    "currency": "USD",
+    "total_amount": 3020,
+    "vat_amount": null,
+    "line_items": [
+      {
+        "name": "Транспортно-экспедиторские услуги (Алматы–Ташкент)",
+        "qty": 2,
+        "price": 1450
+      },
+      {
+        "name": "Страхование груза",
+        "qty": 1,
+        "price": 120
+      }
+    ]
+  },
+  "expected_warnings": [
+    "VAT_NOT_APPLICABLE"
+  ]
+}

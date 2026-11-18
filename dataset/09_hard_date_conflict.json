@@ -1,0 +1,23 @@
+{
+  "note": "СЛОЖНЫЙ: две разные даты счёта (01.10 в шапке и 03.10 ниже). По правилу берём дату из шапки. НДС 'в т.ч.'.",
+  "expected": {
+    "doc_type": "invoice",
+    "supplier_name": "ТОО \"Altyn Dala Agro\"",
+    "supplier_bin": "210340077120",
+    "doc_number": "77",
+    "doc_date": "2026-10-01",
+    "currency": "KZT",
+    "total_amount": 475000,
+    "vat_amount": 65517.24,
+    "line_items": [
+      {
+        "name": "Семена подсолнечника \"Сибиряк\", кг",
+        "qty": 500,
+        "price": 950
+      }
+    ]
+  },
+  "expected_warnings": [
+    "DATE_CONFLICT"
+  ]
+}

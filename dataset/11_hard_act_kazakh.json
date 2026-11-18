@@ -1,0 +1,26 @@
+{
+  "note": "СЛОЖНЫЙ: полностью казахский акт, порядок даты 'YYYY жылғы DD месяц', ҚҚС = НДС, БСН заказчика рядом.",
+  "expected": {
+    "doc_type": "act",
+    "supplier_name": "«Сарыарқа Клининг» ЖШС",
+    "supplier_bin": "170940043217",
+    "doc_number": "14",
+    "doc_date": "2026-09-25",
+    "currency": "KZT",
+    "total_amount": 410000,
+    "vat_amount": 56551.72,
+    "line_items": [
+      {
+        "name": "Кеңсені жинау (ай)",
+        "qty": 1,
+        "price": 320000
+      },
+      {
+        "name": "Терезе жуу",
+        "qty": 2,
+        "price": 45000
+      }
+    ]
+  },
+  "expected_warnings": []
+}

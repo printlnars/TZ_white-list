@@ -1,0 +1,24 @@
+{
+  "note": "Документ 3 из ТЗ. OCR в БИН (l->1, O->0), казахская дата, сумма только прописью по-казахски, НДС не облагается -> vat null.",
+  "expected": {
+    "doc_type": "invoice",
+    "supplier_name": "ТОО \"Кокжиек Курылыс\"",
+    "supplier_bin": "210640900180",
+    "doc_number": "AKT-09",
+    "doc_date": "2026-10-09",
+    "currency": "KZT",
+    "total_amount": 340000,
+    "vat_amount": null,
+    "line_items": [
+      {
+        "name": "Қызмет көрсету / Оказание услуг",
+        "qty": 1,
+        "price": 340000
+      }
+    ]
+  },
+  "expected_warnings": [
+    "BIN_OCR_CORRECTED",
+    "VAT_NOT_APPLICABLE"
+  ]
+}

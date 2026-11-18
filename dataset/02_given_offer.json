@@ -1,0 +1,26 @@
+{
+  "note": "Документ 2 из ТЗ. Нет БИН/номера/итоговой суммы — null (сумму позиций не складываем). Дата документа = 'Составлено', а не срок действия.",
+  "expected": {
+    "doc_type": "commercial_offer",
+    "supplier_name": "Digital Solutions",
+    "supplier_bin": null,
+    "doc_number": null,
+    "doc_date": "2026-11-05",
+    "currency": "KZT",
+    "total_amount": null,
+    "vat_amount": null,
+    "line_items": [
+      {
+        "name": "Разработка сайта",
+        "qty": null,
+        "price": 450000
+      },
+      {
+        "name": "Техподдержка, в месяц",
+        "qty": null,
+        "price": 60000
+      }
+    ]
+  },
+  "expected_warnings": []
+}
